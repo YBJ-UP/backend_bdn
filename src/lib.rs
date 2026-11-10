@@ -11,6 +11,8 @@ pub mod utils {
 }
 
 pub mod model {
+    pub(crate) mod area;
+    pub mod sucursal;
     pub(crate) mod user;
 }
 
