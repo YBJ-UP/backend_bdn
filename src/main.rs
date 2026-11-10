@@ -1,6 +1,7 @@
 use std::env::var;
 
-use axum::{Router, routing::get};
+use axum::Router;
+use backend_bdn::routes::create_router;
 use dotenv::dotenv;
 use tracing_subscriber::{fmt, layer::SubscriberExt, registry, util::SubscriberInitExt};
 
@@ -11,9 +12,7 @@ async fn main() {
 
     let db_url = var("DATABASE_URL").expect("URL de base de datos no especificado");
 
-    let app: Router = Router::new()
-        .route("/health", get(|| async { "Es servidor está saludable" }))
-        .route("/", get(|| async { "El servidor está activo." }));
+    let app: Router = create_router();
 
     let port = var("PORT").unwrap_or_else(|_| {
         println!("No se definió el puerto. Utilizando el puerto 3000");
