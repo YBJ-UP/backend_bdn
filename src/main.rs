@@ -10,7 +10,9 @@ async fn main() {
 
     let db_url = var("DATABASE_URL").expect("URL de base de datos no especificado");
 
-    let app: Router = Router::new().route("/health", get(|| async { "Hola" }));
+    let app: Router = Router::new()
+        .route("/health", get(|| async { "Es servidor está saludable" }))
+        .route("/", get(|| async { "El servidor está activo." }));
 
     let port = var("PORT").unwrap_or_else(|_| {
         println!("No se definió el puerto. Utilizando el puerto 3000");
@@ -22,6 +24,12 @@ async fn main() {
         .expect("Error al abrir el puerto.");
 
     axum::serve(listener, app)
+        .with_graceful_shutdown(graceful_exit())
         .await
         .expect("Error al iniciar el servidor");
+}
+
+async fn graceful_exit() {
+    tokio::signal::ctrl_c().await.unwrap();
+    tracing::warn!("Señal de salida recibida. Apagando servidor...")
 }
