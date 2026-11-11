@@ -8,10 +8,10 @@ use uuid::Uuid;
 
 use crate::{ApiError, AppState};
 
-pub trait Get {
+pub trait Get: Sized {
     fn get_many(
         state: State<Arc<AppState>>,
-    ) -> impl Future<Output = Result<Json<Box<Self>>, ApiError>>;
+    ) -> impl Future<Output = Result<Json<Vec<Self>>, ApiError>>;
     fn get_one(
         state: State<Arc<AppState>>,
         id: Path<Uuid>,

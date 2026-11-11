@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use sqlx::prelude::FromRow;
 use uuid::Uuid;
 
 #[derive(Debug, Default, Serialize, Deserialize)]
@@ -32,7 +33,7 @@ pub struct Empleado {
     id_area: Option<Uuid>,
 }
 
-#[derive(Debug, Default, Serialize, Deserialize)]
+#[derive(Debug, Default, Serialize, Deserialize, FromRow)]
 pub struct Cliente {
     id: Uuid,
     nombre: String,
