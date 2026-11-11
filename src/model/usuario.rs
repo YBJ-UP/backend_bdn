@@ -33,6 +33,23 @@ pub struct User {
     id_area: Option<Uuid>,
 }
 
+#[derive(Debug, Default, Serialize, Deserialize)]
 pub struct Empleado {
     id: Uuid,
+    rol: Role,
+    nombre: String,
+    correo: String,
+    telefono: Option<String>,
+    salario: Option<f64>,
+    estado: Status,
+    id_sucursal: Option<Uuid>,
+    id_area: Option<Uuid>,
+}
+
+#[derive(Debug, Default, Serialize, Deserialize)]
+pub struct Cliente {
+    id: Uuid,
+    nombre: String,
+    correo: String,
+    telefono: Option<String>,
 }
