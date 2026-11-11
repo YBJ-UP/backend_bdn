@@ -1,3 +1,5 @@
+use sqlx::PgPool;
+
 use crate::model::errors::ApiError;
 use crate::traits::crud;
 
@@ -20,6 +22,10 @@ pub mod service {
 
 pub mod routes {
     pub mod user;
+}
+
+pub struct AppState {
+    pub pg: PgPool,
 }
 
 pub mod router;

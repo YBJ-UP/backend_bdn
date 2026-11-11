@@ -1,11 +1,21 @@
-use axum::{Json, extract::Path};
+use std::sync::Arc;
+
+use axum::{
+    Json,
+    extract::{Path, State},
+};
 use uuid::Uuid;
 
-use crate::ApiError;
+use crate::{ApiError, AppState};
 
 pub trait Get {
-    fn get_many() -> impl Future<Output = Result<Json<Box<Self>>, ApiError>>;
-    fn get_one(id: Path<Uuid>) -> impl Future<Output = Result<Json<Box<Self>>, ApiError>>;
+    fn get_many(
+        state: State<Arc<AppState>>,
+    ) -> impl Future<Output = Result<Json<Box<Self>>, ApiError>>;
+    fn get_one(
+        state: State<Arc<AppState>>,
+        id: Path<Uuid>,
+    ) -> impl Future<Output = Result<Json<Box<Self>>, ApiError>>;
 }
 
 pub trait Post {
