@@ -1,5 +1,5 @@
-use crate::utils::response_body;
-use axum::{http::StatusCode, response::IntoResponse};
+use axum::{Json, http::StatusCode, response::IntoResponse};
+use serde_json::json;
 
 pub enum AuthError {
     InvalidToken,
@@ -25,6 +25,8 @@ impl IntoResponse for AuthError {
             ),
         };
 
-        response_body::to_error(status, msg.to_string())
+        let body = Json(json!({ "error": msg }));
+
+        (status, body).into_response()
     }
 }

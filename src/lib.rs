@@ -1,13 +1,9 @@
 use axum::Json;
 
-use crate::{errors::auth_error::AuthError, model::usuario::User};
+use crate::{errors::auth_error::AuthError, model::usuario::User, traits::crud};
 
 pub mod errors {
     pub(crate) mod auth_error;
-}
-
-pub mod utils {
-    pub(crate) mod response_body;
 }
 
 pub mod model {
