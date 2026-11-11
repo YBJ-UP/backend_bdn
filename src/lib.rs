@@ -18,4 +18,8 @@ pub mod service {
     pub mod user;
 }
 
-pub mod routes;
+pub mod routes {
+    pub mod user;
+}
+
+pub mod router;
