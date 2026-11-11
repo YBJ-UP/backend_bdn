@@ -1,6 +1,6 @@
 use uuid::Uuid;
 
-use crate::model::{sucursal::Office, usuario::User};
+use crate::model::{sucursal::Office, usuario::Cliente};
 
 enum EstadoVenta {
     Cancelado,
@@ -15,7 +15,7 @@ enum ContenidoVenta {
 
 struct Venta {
     id: Uuid,
-    cliente: User,
+    cliente: Cliente,
     sucursal: Office,
     estado: EstadoVenta,
     contenido: Vec<ContenidoVenta>,
