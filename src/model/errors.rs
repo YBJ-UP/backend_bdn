@@ -7,6 +7,14 @@ pub enum ApiError {
     ExpiredToken,
     WrongCredentials,
     CreatedToken,
+    NotFound,
+    DbError(sqlx::Error),
+}
+
+impl From<sqlx::Error> for ApiError {
+    fn from(e: sqlx::Error) -> Self {
+        ApiError::DbError(e)
+    }
 }
 
 impl IntoResponse for ApiError {
@@ -22,6 +30,11 @@ impl IntoResponse for ApiError {
             Self::CreatedToken => (
                 StatusCode::INTERNAL_SERVER_ERROR,
                 "Error al generar el token",
+            ),
+            Self::NotFound => (StatusCode::NOT_FOUND, "No se encontró lo que se busca."),
+            Self::DbError(e) => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "Error en la base de datos",
             ),
         };
 
