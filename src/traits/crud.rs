@@ -15,7 +15,7 @@ pub trait Get: Sized {
     fn get_one(
         state: State<Arc<AppState>>,
         id: Path<Uuid>,
-    ) -> impl Future<Output = Result<Json<Box<Self>>, ApiError>>;
+    ) -> impl Future<Output = Result<Json<Self>, ApiError>>;
 }
 
 pub trait Post {
