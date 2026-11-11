@@ -19,6 +19,7 @@ enum Status {
     Inactivo,
 }
 
+// esto o separarlos por rol aquí
 #[derive(Debug, Default, Serialize, Deserialize)]
 pub struct User {
     id: Uuid,
@@ -30,4 +31,8 @@ pub struct User {
     estado: Status,
     id_sucursal: Option<Uuid>,
     id_area: Option<Uuid>,
+}
+
+pub struct Empleado {
+    id: Uuid,
 }
