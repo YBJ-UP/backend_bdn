@@ -3,7 +3,7 @@ use std::{env::var, error::Error, process, sync::Arc};
 use axum::Router;
 use backend_bdn::{AppState, router::create_router};
 use dotenv::dotenv;
-use sqlx::PgPool;
+use sqlx::postgres::PgPoolOptions;
 use tracing_subscriber::{fmt, layer::SubscriberExt, registry, util::SubscriberInitExt};
 
 #[tokio::main]
@@ -14,13 +14,17 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let db_url = var("DATABASE_URL").expect("URL de base de datos no especificado");
 
     let state = Arc::new(AppState {
-        pg: PgPool::connect(&db_url).await.unwrap_or_else(|e| {
-            eprintln!(
-                "No se pudo conectar a la base de datos en {}: {}",
-                db_url, e
-            );
-            process::exit(1)
-        }),
+        pg: PgPoolOptions::new()
+            .max_connections(5)
+            .connect(&db_url)
+            .await
+            .unwrap_or_else(|e| {
+                eprintln!(
+                    "No se pudo conectar a la base de datos en {}: {}",
+                    db_url, e
+                );
+                process::exit(1)
+            }),
     });
 
     let app: Router = create_router().with_state(state);
