@@ -1,6 +1,10 @@
+use axum::Json;
+
+use crate::errors::auth_error::AuthError;
+
 pub trait Get {
-    fn get_many();
-    fn get_one();
+    fn get_many() -> Result<Json<Box<Self>>, AuthError>;
+    fn get_one() -> Result<Json<Box<Self>>, AuthError>;
 }
 
 pub trait Post {
