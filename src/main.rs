@@ -1,4 +1,4 @@
-use std::{env::var, error::Error, sync::Arc};
+use std::{env::var, error::Error, process, sync::Arc};
 
 use axum::Router;
 use backend_bdn::{AppState, router::create_router};
@@ -14,9 +14,13 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let db_url = var("DATABASE_URL").expect("URL de base de datos no especificado");
 
     let state = Arc::new(AppState {
-        pg: PgPool::connect(&db_url)
-            .await
-            .unwrap_or_else(|_| panic!("No se pudo conectar a la base de datos en {}", db_url)),
+        pg: PgPool::connect(&db_url).await.unwrap_or_else(|e| {
+            eprintln!(
+                "No se pudo conectar a la base de datos en {}: {}",
+                db_url, e
+            );
+            process::exit(1)
+        }),
     });
 
     let app: Router = create_router().with_state(state);
