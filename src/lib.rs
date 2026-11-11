@@ -1,6 +1,6 @@
 use axum::Json;
 
-use crate::{errors::auth_error::AuthError, model::user::User};
+use crate::{errors::auth_error::AuthError, model::usuario::User};
 
 pub mod errors {
     pub(crate) mod auth_error;
@@ -12,8 +12,14 @@ pub mod utils {
 
 pub mod model {
     pub(crate) mod area;
+    pub mod movimientos;
     pub mod sucursal;
-    pub(crate) mod user;
+    pub(crate) mod usuario;
+    pub mod venta;
+}
+
+pub mod traits {
+    pub mod crud;
 }
 
 pub mod routes;
