@@ -1,10 +1,5 @@
-use axum::Json;
-
-use crate::{
-    errors::auth_error::AuthError,
-    model::usuario::{Cliente, User},
-    traits::crud,
-};
+use crate::errors::auth_error::AuthError;
+use crate::traits::crud;
 
 pub mod errors {
     pub(crate) mod auth_error;
@@ -27,11 +22,3 @@ pub mod service {
 }
 
 pub mod routes;
-
-pub async fn get_users() -> Result<Json<User>, AuthError> {
-    Ok(Json(User::default()))
-}
-
-pub async fn error() -> Result<Json<Cliente>, AuthError> {
-    Err(AuthError::ExpiredToken)
-}
