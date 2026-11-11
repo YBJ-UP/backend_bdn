@@ -1,7 +1,7 @@
 use axum::{Json, http::StatusCode, response::IntoResponse};
 use serde_json::json;
 
-pub enum AuthError {
+pub enum ApiError {
     InvalidToken,
     MissingCredentials,
     ExpiredToken,
@@ -9,7 +9,7 @@ pub enum AuthError {
     CreatedToken,
 }
 
-impl IntoResponse for AuthError {
+impl IntoResponse for ApiError {
     fn into_response(self) -> axum::response::Response {
         let (status, msg) = match self {
             Self::InvalidToken => (StatusCode::UNAUTHORIZED, "Credenciales inválidas"),

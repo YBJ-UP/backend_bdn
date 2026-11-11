@@ -1,12 +1,9 @@
-use crate::errors::auth_error::AuthError;
+use crate::model::errors::ApiError;
 use crate::traits::crud;
-
-pub mod errors {
-    pub(crate) mod auth_error;
-}
 
 pub mod model {
     pub(crate) mod area;
+    pub mod errors;
     pub mod movimientos;
     pub mod sucursal;
     pub(crate) mod usuario;
