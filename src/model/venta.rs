@@ -26,11 +26,6 @@ impl From<String> for EstadoVenta {
     }
 }
 
-enum ContenidoVenta {
-    Servicio(Servicio),
-    Paquete(Paquete),
-}
-
 #[derive(Debug, Serialize, Deserialize, FromRow)]
 pub struct Venta {
     pub id: Uuid,
@@ -40,19 +35,4 @@ pub struct Venta {
     #[serde(with = "fecha_fmt")]
     pub fecha: PlainDateTime,
     pub total: BigDecimal,
-}
-
-struct Servicio {
-    id: Uuid,
-    nombre: String,
-    descripcion: String,
-    precio: f64,
-}
-
-struct Paquete {
-    id: Uuid,
-    nombre: String,
-    descripcion: String,
-    precio: f64,
-    contenido: Vec<Servicio>,
 }
