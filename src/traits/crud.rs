@@ -19,16 +19,24 @@ pub trait Get: Sized {
 }
 
 pub trait Post: Sized {
-    fn post_many() -> impl Future<Output = Result<Json<Self>, ApiError>>;
-    fn post_one() -> impl Future<Output = Result<Json<Self>, ApiError>>;
+    fn post_one(
+        state: State<Arc<AppState>>,
+        payload: Json<Self>,
+    ) -> impl Future<Output = Result<Json<Self>, ApiError>>;
 }
 
 pub trait Update: Sized {
-    fn update_many() -> impl Future<Output = Result<Json<Self>, ApiError>>;
-    fn update_one() -> impl Future<Output = Result<Json<Self>, ApiError>>;
+    fn update_one(
+        state: State<Arc<AppState>>,
+        id: Path<Uuid>,
+        payload: Json<Self>,
+    ) -> impl Future<Output = Result<Json<Self>, ApiError>>;
 }
 
 pub trait Delete: Sized {
-    fn delete_many() -> impl Future<Output = Result<Json<Self>, ApiError>>;
-    fn delete_one() -> impl Future<Output = Result<Json<Self>, ApiError>>;
+    fn delete_one(
+        state: State<Arc<AppState>>,
+        id: Path<Uuid>,
+        payload: Json<Self>,
+    ) -> impl Future<Output = Result<Json<Self>, ApiError>>;
 }
