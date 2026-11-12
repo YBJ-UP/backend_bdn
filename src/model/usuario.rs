@@ -1,45 +1,54 @@
 use serde::{Deserialize, Serialize};
-use sqlx::prelude::FromRow;
+use sqlx::{prelude::FromRow, types::BigDecimal};
 use strum_macros::EnumString;
 use uuid::Uuid;
 
 #[derive(Debug, Default, Serialize, Deserialize, EnumString)]
+#[strum(ascii_case_insensitive)]
 pub enum Role {
-    #[strum(ascii_case_insensitive)]
     Admin,
-    #[strum(ascii_case_insensitive)]
     Ceo,
-    #[strum(ascii_case_insensitive)]
     Gerente,
-    #[strum(ascii_case_insensitive)]
     Supervisor,
-    #[strum(ascii_case_insensitive)]
     #[default]
     Empleado,
-    #[strum(ascii_case_insensitive)]
     Cliente,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, EnumString)]
+#[strum(ascii_case_insensitive)]
 pub enum Status {
-    #[strum(ascii_case_insensitive)]
-    Activo,
-    #[strum(ascii_case_insensitive)]
     #[default]
-    Inactivo,
+    Activo,
+    Baja,
+    Pausado,
 }
 
-#[derive(Debug, Default, Serialize, Deserialize)]
+impl From<String> for Role {
+    fn from(s: String) -> Self {
+        s.parse().unwrap_or_default()
+    }
+}
+
+impl From<String> for Status {
+    fn from(s: String) -> Self {
+        s.parse().unwrap_or_default()
+    }
+}
+
+#[derive(Debug, Default, Serialize, Deserialize, FromRow)]
 pub struct Empleado {
     pub id: Uuid,
+    #[sqlx(try_from = "String")]
     pub rol: Role,
     pub nombre: String,
     pub correo: String,
     pub telefono: String,
-    pub salario: f32,
+    pub salario: Option<BigDecimal>,
+    #[sqlx(try_from = "String")]
     pub estado: Status,
-    pub sucursal: String,
-    pub area: String,
+    pub sucursal: Option<String>,
+    pub area: Option<String>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, FromRow)]

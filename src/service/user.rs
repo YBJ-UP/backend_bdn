@@ -44,15 +44,14 @@ impl crud::Get for Cliente {
 
 impl crud::Get for Empleado {
     async fn get_many(State(state): State<Arc<AppState>>) -> Result<Json<Vec<Self>>, ApiError> {
-        // let employees: Vec<Empleado> = sqlx::query_as!(
-        //     Empleado,
-        //     "SELECT id, rol, nombre, correo, telefono, salario, estado, area, sucursal FROM v_usuario_detalle"
-        // )
-        //     .fetch_all(&state.pg)
-        //     .await?;
-        //
-        // Ok(Json(employees))
-        Err(ApiError::InvalidToken)
+        let employees: Vec<Empleado> =
+            sqlx::query_as!(Empleado,
+                r#"SELECT id AS "id!", rol AS "rol!", nombre AS "nombre!", correo AS "correo!", telefono AS "telefono!", salario, estado AS "estado!", area, sucursal FROM v_usuario_detalle"#
+                )
+                .fetch_all(&state.pg)
+                .await?;
+
+        Ok(Json(employees))
     }
 
     async fn get_one(
