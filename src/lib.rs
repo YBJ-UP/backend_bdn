@@ -9,7 +9,7 @@ pub mod model {
     pub mod movimientos;
     pub mod sucursal;
     pub(crate) mod usuario;
-    pub mod venta;
+    pub(crate) mod venta;
 }
 
 pub mod traits {
@@ -19,9 +19,11 @@ pub mod traits {
 pub mod service {
     pub mod client;
     pub mod employee;
+    pub mod sale;
 }
 
 pub mod routes {
+    pub mod sale;
     pub mod user;
 }
 
