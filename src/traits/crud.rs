@@ -8,6 +8,13 @@ use uuid::Uuid;
 
 use crate::{ApiError, AppState};
 
+pub trait Filter: Sized {
+    fn filter_many(
+        state: State<Arc<AppState>>,
+        id: Path<Uuid>,
+    ) -> impl Future<Output = Result<Json<Vec<Self>>, ApiError>>;
+}
+
 pub trait Get: Sized {
     fn get_many(
         state: State<Arc<AppState>>,
