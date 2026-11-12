@@ -142,6 +142,7 @@ version = "0.1.0"
 dependencies = [
  "axum",
  "axum-extra",
+ "bigdecimal",
  "dotenv",
  "jsonwebtoken",
  "serde",
@@ -173,6 +174,7 @@ dependencies = [
  "num-bigint",
  "num-integer",
  "num-traits",
+ "serde",
 ]
 
 [[package]]
