@@ -17,7 +17,8 @@ pub mod traits {
 }
 
 pub mod service {
-    pub mod user;
+    pub mod client;
+    pub mod employee;
 }
 
 pub mod routes {
