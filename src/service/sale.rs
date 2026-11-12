@@ -16,8 +16,8 @@ impl crud::Get for Venta {
     async fn get_many(
         State(state): State<Arc<crate::AppState>>,
     ) -> Result<Json<Vec<Self>>, ApiError> {
-        let sales: Vec<Venta> = sqlx::query_as!(
-            Venta,
+        let sales: Vec<Self> = sqlx::query_as!(
+            Self,
             r#"SELECT id AS "id!", created_at AS "fecha!", estado AS "estado!", sucursal AS "sucursal!", cliente AS "cliente!", total AS "total!" FROM v_venta_resumen"#
         )
             .fetch_all(&state.pg)
@@ -30,8 +30,8 @@ impl crud::Get for Venta {
         State(state): State<Arc<AppState>>,
         Path(id): Path<Uuid>,
     ) -> Result<Json<Self>, ApiError> {
-        let sale: Venta = sqlx::query_as!(
-            Venta,
+        let sale: Self = sqlx::query_as!(
+            Self,
             r#"SELECT id AS "id!", created_at AS "fecha!", estado AS "estado!", sucursal AS "sucursal!", cliente AS "cliente!", total AS "total!" FROM v_venta_resumen WHERE id=$1"#,
             id
         )
