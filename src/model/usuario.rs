@@ -5,18 +5,26 @@ use uuid::Uuid;
 
 #[derive(Debug, Default, Serialize, Deserialize, EnumString)]
 pub enum Role {
+    #[strum(ascii_case_insensitive)]
     Admin,
+    #[strum(ascii_case_insensitive)]
     Ceo,
+    #[strum(ascii_case_insensitive)]
     Gerente,
+    #[strum(ascii_case_insensitive)]
     Supervisor,
+    #[strum(ascii_case_insensitive)]
     #[default]
     Empleado,
+    #[strum(ascii_case_insensitive)]
     Cliente,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, EnumString)]
 pub enum Status {
+    #[strum(ascii_case_insensitive)]
     Activo,
+    #[strum(ascii_case_insensitive)]
     #[default]
     Inactivo,
 }
@@ -27,7 +35,7 @@ pub struct Empleado {
     pub rol: Role,
     pub nombre: String,
     pub correo: String,
-    pub telefono: Option<String>,
+    pub telefono: String,
     pub salario: f32,
     pub estado: Status,
     pub sucursal: String,
