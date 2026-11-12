@@ -27,6 +27,7 @@ pub mod service {
 }
 
 pub mod routes {
+    pub mod details;
     pub mod sale;
     pub mod user;
 }
