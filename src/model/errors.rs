@@ -32,10 +32,13 @@ impl IntoResponse for ApiError {
                 "Error al generar el token",
             ),
             Self::NotFound => (StatusCode::NOT_FOUND, "No se encontró lo que se busca."),
-            Self::DbError(e) => (
-                StatusCode::INTERNAL_SERVER_ERROR,
-                "Error en la base de datos",
-            ),
+            Self::DbError(e) => {
+                tracing::error!("Error de base de datos: {e}");
+                (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    "Error en la base de datos",
+                )
+            }
         };
 
         let body = Json(json!({ "error": msg }));
