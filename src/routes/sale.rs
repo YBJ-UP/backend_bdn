@@ -5,5 +5,7 @@ use axum::{Router, routing::get};
 use crate::{AppState, model::venta::Venta, traits::crud::Get};
 
 pub fn sales_routes() -> Router<Arc<AppState>> {
-    Router::new().route("/sales", get(Venta::get_many))
+    Router::new()
+        .route("/sales", get(Venta::get_many))
+        .route("/sales/{id}", get(Venta::get_one))
 }

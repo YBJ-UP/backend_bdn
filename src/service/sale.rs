@@ -1,6 +1,10 @@
 use std::sync::Arc;
 
-use axum::{Json, extract::State};
+use axum::{
+    Json,
+    extract::{Path, State},
+};
+use uuid::Uuid;
 
 use crate::{
     AppState,
@@ -10,8 +14,8 @@ use crate::{
 
 impl crud::Get for Venta {
     async fn get_many(
-        state: axum::extract::State<std::sync::Arc<crate::AppState>>,
-    ) -> Result<axum::Json<Vec<Self>>, ApiError> {
+        State(state): State<Arc<crate::AppState>>,
+    ) -> Result<Json<Vec<Self>>, ApiError> {
         let sales: Vec<Venta> = sqlx::query_as!(
             Venta,
             r#"SELECT id AS "id!", created_at AS "fecha!", estado AS "estado!", sucursal AS "sucursal!", cliente AS "cliente!", total AS "total!" FROM v_venta_resumen"#
@@ -23,9 +27,17 @@ impl crud::Get for Venta {
     }
 
     async fn get_one(
-        state: State<Arc<AppState>>,
-        id: axum::extract::Path<uuid::Uuid>,
-    ) -> Result<axum::Json<Self>, ApiError> {
-        Err(ApiError::ExpiredToken)
+        State(state): State<Arc<AppState>>,
+        Path(id): Path<Uuid>,
+    ) -> Result<Json<Self>, ApiError> {
+        let sale: Venta = sqlx::query_as!(
+            Venta,
+            r#"SELECT id AS "id!", created_at AS "fecha!", estado AS "estado!", sucursal AS "sucursal!", cliente AS "cliente!", total AS "total!" FROM v_venta_resumen WHERE id=$1"#,
+            id
+        )
+            .fetch_one(&state.pg)
+            .await?;
+
+        Ok(Json(sale))
     }
 }
