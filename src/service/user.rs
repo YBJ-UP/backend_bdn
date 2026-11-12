@@ -15,7 +15,7 @@ impl crud::Get for Cliente {
     async fn get_many(State(state): State<Arc<AppState>>) -> Result<Json<Vec<Self>>, ApiError> {
         let rows: Vec<Cliente> = sqlx::query_as!(
             Cliente,
-            "SELECT id, nombre, correo, telefono FROM usuario WHERE id_rol=5"
+            "SELECT id, nombre, correo, telefono FROM usuario WHERE id_rol=6"
         )
         .fetch_all(&state.pg)
         .await?;
@@ -29,7 +29,7 @@ impl crud::Get for Cliente {
     ) -> Result<Json<Self>, ApiError> {
         let client: Option<Cliente> = sqlx::query_as!(
             Cliente,
-            "SELECT id, nombre, correo, telefono FROM v_cliente WHERE id = $1",
+            r#"SELECT id AS "id!", nombre AS "nombre!", correo as "correo!", telefono as "telefono!" FROM v_cliente WHERE id = $1"#,
             id
         )
         .fetch_optional(&state.pg)
