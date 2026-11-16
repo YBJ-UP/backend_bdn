@@ -21,13 +21,17 @@ pub mod traits {
 
 pub mod service {
     pub mod client;
+    pub mod department;
     pub mod employee;
+    pub mod office;
     pub mod sale;
     pub mod sale_details;
 }
 
 pub mod routes {
+    pub mod department;
     pub mod details;
+    pub mod office;
     pub mod sale;
     pub mod user;
 }
