@@ -1,11 +1,13 @@
+use bigdecimal::BigDecimal;
+use serde::{Deserialize, Serialize};
+use sqlx::prelude::FromRow;
 use uuid::Uuid;
 
-use crate::model::servicio::Servicio;
-
-struct Paquete {
+#[derive(Debug, Serialize, Deserialize, FromRow)]
+pub struct Paquete {
     id: Uuid,
     nombre: String,
     descripcion: String,
-    precio: f64,
-    contenido: Vec<Servicio>,
+    precio: BigDecimal,
+    servicios: i64,
 }
