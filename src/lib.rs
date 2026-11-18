@@ -23,6 +23,7 @@ pub mod service {
     pub mod client;
     pub mod department;
     pub mod employee;
+    pub mod movement;
     pub mod office;
     pub mod sale;
     pub mod sale_details;
@@ -31,6 +32,7 @@ pub mod service {
 pub mod routes {
     pub mod department;
     pub mod details;
+    pub mod movements;
     pub mod office;
     pub mod sale;
     pub mod user;
