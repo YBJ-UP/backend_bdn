@@ -17,11 +17,8 @@ impl Filter for DetalleVenta {
         State(state): State<Arc<AppState>>,
         Path(id): Path<Uuid>,
     ) -> Result<Json<Vec<Self>>, ApiError> {
-        let details: Vec<Self> = sqlx::query_as!(
-            Self,
-            r#"SELECT id AS "id!", concepto AS "concepto!", descripcion AS "descripcion!", tipo AS "tipo!", cantidad AS "cantidad!", precio AS "precio!", subtotal AS "subtotal!" FROM v_detalle_venta WHERE id_venta=$1"#,
-            id
-        )
+        let details: Vec<Self> = sqlx::query_as("SELECT id, concepto, descripcion, tipo, cantidad, precio, subtotal FROM v_detalle_venta WHERE id_venta=$1")
+            .bind(id)
             .fetch_all(&state.pg)
             .await?;
 

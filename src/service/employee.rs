@@ -11,9 +11,7 @@ use crate::{ApiError, AppState, crud, model::usuario::Empleado};
 impl crud::Get for Empleado {
     async fn get_many(State(state): State<Arc<AppState>>) -> Result<Json<Vec<Self>>, ApiError> {
         let employees: Vec<Empleado> =
-            sqlx::query_as!(Empleado,
-                r#"SELECT id AS "id!", rol AS "rol!", nombre AS "nombre!", correo AS "correo!", telefono AS "telefono!", salario, estado AS "estado!", area, sucursal FROM v_usuario_detalle"#
-                )
+            sqlx::query_as( "SELECT id, rol, nombre, correo, telefono, salario, estado, area, sucursal FROM v_usuario_detalle")
                 .fetch_all(&state.pg)
                 .await?;
 
@@ -25,10 +23,8 @@ impl crud::Get for Empleado {
         Path(id): Path<Uuid>,
     ) -> Result<Json<Self>, ApiError> {
         let employee: Option<Empleado> =
-            sqlx::query_as!(Empleado,
-                r#"SELECT id AS "id!", rol AS "rol!", nombre AS "nombre!", correo AS "correo!", telefono AS "telefono!", salario, estado AS "estado!", area, sucursal FROM v_usuario_detalle WHERE id=$1"#,
-                id
-                )
+            sqlx::query_as("SELECT id, rol, nombre, correo, telefono, salario, estado, area, sucursal FROM v_usuario_detalle WHERE id=$1")
+            .bind(id)
                 .fetch_optional(&state.pg)
                 .await?;
 

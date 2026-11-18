@@ -53,7 +53,7 @@ pub struct Empleado {
 
 #[derive(Debug, Default, Serialize, Deserialize, FromRow)]
 pub struct Cliente {
-    pub id: Option<Uuid>,
+    pub id: Uuid,
     pub nombre: String,
     pub correo: String,
     pub telefono: Option<String>,

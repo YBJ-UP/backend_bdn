@@ -31,6 +31,7 @@ pub struct Venta {
     pub id: Uuid,
     pub cliente: String,
     pub sucursal: String,
+    #[sqlx(try_from = "String")]
     pub estado: EstadoVenta,
     #[serde(with = "fecha_fmt")]
     pub fecha: PlainDateTime,
