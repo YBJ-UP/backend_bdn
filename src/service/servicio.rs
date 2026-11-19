@@ -63,3 +63,21 @@ impl crud::Post for Servicio {
         Ok(Json(res))
     }
 }
+
+impl crud::Update for Servicio {
+    async fn update_one(
+        State(state): State<Arc<AppState>>,
+        Path(id): Path<Uuid>,
+        Json(payload): Json<Self>,
+    ) -> Result<Json<Self>, ApiError> {
+        let res: Self = sqlx::query_as("UPDATE servicio SET nombre = $1, descripcion = $2, precio = $3 WHERE id = $4 RETURNING *")
+            .bind(payload.nombre)
+            .bind(payload.descripcion)
+            .bind(payload.precio)
+            .bind(id)
+            .fetch_one(&state.pg)
+            .await?;
+
+        Ok(Json(res))
+    }
+}
