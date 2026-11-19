@@ -27,3 +27,21 @@ impl crud::Filter for Servicio {
         Ok(Json(res))
     }
 }
+
+impl crud::Get for Servicio {
+    async fn get_many(State(state): State<Arc<AppState>>) -> Result<Json<Vec<Self>>, ApiError> {
+        let res: Vec<Self> = sqlx::query_as("SELECT id, nombre, descripcion, precio FROM servicio")
+            .fetch_all(&state.pg)
+            .await?;
+
+        Ok(Json(res))
+    }
+
+    // NO implementado por el momento
+    async fn get_one(
+        _state: State<Arc<AppState>>,
+        _id: Path<Uuid>,
+    ) -> Result<Json<Self>, ApiError> {
+        Err(ApiError::NotFound)
+    }
+}
