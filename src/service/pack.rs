@@ -9,11 +9,14 @@ use uuid::Uuid;
 
 use crate::{
     AppState,
-    model::{errors::ApiError, paquete::Paquete},
+    model::{
+        errors::ApiError,
+        paquete::{Paquete, PaqueteView},
+    },
     traits::crud,
 };
 
-impl crud::Get for Paquete {
+impl crud::Get for PaqueteView {
     async fn get_many(State(state): State<Arc<AppState>>) -> Result<Json<Vec<Self>>, ApiError> {
         let res: Vec<Self> = sqlx::query_as("SELECT * FROM v_paquete_servicio")
             .fetch_all(&state.pg)
