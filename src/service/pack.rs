@@ -3,7 +3,9 @@ use std::sync::Arc;
 use axum::{
     Json,
     extract::{Path, State},
+    http::StatusCode,
 };
+use uuid::Uuid;
 
 use crate::{
     AppState,
@@ -26,5 +28,58 @@ impl crud::Get for Paquete {
         Path(_id): Path<uuid::Uuid>,
     ) -> Result<axum::Json<Self>, ApiError> {
         Err(ApiError::NotFound)
+    }
+}
+
+impl crud::Post for Paquete {
+    async fn post_one(
+        State(state): State<Arc<AppState>>,
+        Json(payload): Json<Self>,
+    ) -> Result<Json<Self>, ApiError> {
+        let res = sqlx::query_as(
+            "INSERT INTO paquete (nombre, descripcion, precio) VALUES ($1, $2, $3) RETURNING id, nombre, descripcion, precio",
+        )
+        .bind(payload.nombre)
+        .bind(payload.descripcion)
+        .bind(payload.precio)
+        .fetch_one(&state.pg)
+        .await?;
+
+        Ok(Json(res))
+    }
+}
+
+impl crud::Update for Paquete {
+    async fn update_one(
+        State(state): State<Arc<AppState>>,
+        Path(id): Path<Uuid>,
+        Json(payload): Json<Self>,
+    ) -> Result<Json<Self>, ApiError> {
+        let res: Self = sqlx::query_as("UPDATE paquete SET nombre = $1, descripcion = $2, precio = $3 WHERE id = $4 RETURNING id, nombre, descripcion, precio")
+            .bind(payload.nombre)
+            .bind(payload.descripcion)
+            .bind(payload.precio)
+            .bind(id)
+            .fetch_one(&state.pg)
+            .await?;
+
+        Ok(Json(res))
+    }
+}
+
+impl crud::Delete for Paquete {
+    async fn delete_one(
+        State(state): State<Arc<AppState>>,
+        Path(id): Path<Uuid>,
+    ) -> Result<StatusCode, ApiError> {
+        let res = sqlx::query("DELETE FROM paquete WHERE id = $1")
+            .bind(id)
+            .execute(&state.pg)
+            .await?;
+        if res.rows_affected() == 0 {
+            Ok(StatusCode::NOT_FOUND)
+        } else {
+            Ok(StatusCode::NO_CONTENT)
+        }
     }
 }

@@ -5,9 +5,9 @@ use uuid::Uuid;
 
 #[derive(Debug, Serialize, Deserialize, FromRow)]
 pub struct Paquete {
-    id: Uuid,
-    nombre: String,
-    descripcion: String,
-    precio: BigDecimal,
-    servicios: i64,
+    id: Option<Uuid>,
+    pub nombre: String,
+    pub descripcion: String,
+    pub precio: BigDecimal,
+    servicios: Option<i64>,
 }
