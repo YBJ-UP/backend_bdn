@@ -8,7 +8,9 @@ pub fn service_routes() -> Router<Arc<AppState>> {
     Router::new()
         .route(
             "/services/{id}",
-            get(Servicio::filter_many).patch(Servicio::update_one),
+            get(Servicio::filter_many)
+                .patch(Servicio::update_one)
+                .delete(Servicio::delete_one),
         )
         .route(
             "/services",

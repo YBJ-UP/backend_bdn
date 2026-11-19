@@ -3,6 +3,7 @@ use std::sync::Arc;
 use axum::{
     Json,
     extract::{Path, State},
+    http::StatusCode,
 };
 use uuid::Uuid;
 
@@ -79,5 +80,22 @@ impl crud::Update for Servicio {
             .await?;
 
         Ok(Json(res))
+    }
+}
+
+impl crud::Delete for Servicio {
+    async fn delete_one(
+        State(state): State<Arc<AppState>>,
+        Path(id): Path<Uuid>,
+    ) -> Result<StatusCode, ApiError> {
+        let res = sqlx::query("DELETE FROM servicio WHERE id = $1")
+            .bind(id)
+            .execute(&state.pg)
+            .await?;
+        if res.rows_affected() == 0 {
+            Ok(StatusCode::NOT_FOUND)
+        } else {
+            Ok(StatusCode::NO_CONTENT)
+        }
     }
 }

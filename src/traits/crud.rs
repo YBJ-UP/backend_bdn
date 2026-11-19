@@ -3,6 +3,7 @@ use std::sync::Arc;
 use axum::{
     Json,
     extract::{Path, State},
+    http::StatusCode,
 };
 use uuid::Uuid;
 
@@ -44,5 +45,5 @@ pub trait Delete: Sized {
     fn delete_one(
         state: State<Arc<AppState>>,
         id: Path<Uuid>,
-    ) -> impl Future<Output = Result<Json<Self>, ApiError>>;
+    ) -> impl Future<Output = Result<StatusCode, ApiError>>;
 }
