@@ -14,4 +14,5 @@ pub fn create_router() -> Router<Arc<AppState>> {
         .merge(routes::department::department_routes())
         .merge(routes::movements::movement_routes())
         .merge(routes::packs::pack_routes())
+        .merge(routes::services::service_routes())
 }

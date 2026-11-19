@@ -28,6 +28,7 @@ pub mod service {
     pub mod pack;
     pub mod sale;
     pub mod sale_details;
+    pub mod servicio;
 }
 
 pub mod routes {
@@ -37,6 +38,7 @@ pub mod routes {
     pub mod office;
     pub mod packs;
     pub mod sale;
+    pub mod services;
     pub mod user;
 }
 
