@@ -44,6 +44,5 @@ pub trait Delete: Sized {
     fn delete_one(
         state: State<Arc<AppState>>,
         id: Path<Uuid>,
-        payload: Json<Self>,
     ) -> impl Future<Output = Result<Json<Self>, ApiError>>;
 }

@@ -45,3 +45,21 @@ impl crud::Get for Servicio {
         Err(ApiError::NotFound)
     }
 }
+
+impl crud::Post for Servicio {
+    async fn post_one(
+        State(state): State<Arc<AppState>>,
+        Json(payload): Json<Self>,
+    ) -> Result<Json<Self>, ApiError> {
+        let res: Self = sqlx::query_as(
+            "INSERT INTO servicio (nombre, descripcion, precio) VALUES ($1, $2, $3) RETURNING *",
+        )
+        .bind(payload.nombre)
+        .bind(payload.descripcion)
+        .bind(payload.precio)
+        .fetch_one(&state.pg)
+        .await?;
+
+        Ok(Json(res))
+    }
+}

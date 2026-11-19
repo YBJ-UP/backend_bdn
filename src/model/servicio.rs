@@ -5,8 +5,8 @@ use uuid::Uuid;
 
 #[derive(Debug, Serialize, Deserialize, FromRow)]
 pub struct Servicio {
-    id: Uuid,
-    nombre: String,
-    descripcion: String,
-    precio: BigDecimal,
+    id: Option<Uuid>,
+    pub nombre: String,
+    pub descripcion: String,
+    pub precio: BigDecimal,
 }
