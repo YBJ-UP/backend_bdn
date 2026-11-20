@@ -12,7 +12,6 @@ pub enum Role {
     Supervisor,
     #[default]
     Empleado,
-    Cliente,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize, EnumString)]
@@ -53,8 +52,8 @@ pub struct Empleado {
 
 #[derive(Debug, Default, Serialize, Deserialize, FromRow)]
 pub struct Cliente {
-    pub id: Uuid,
+    pub id: Option<Uuid>,
     pub nombre: String,
     pub correo: String,
-    pub telefono: Option<String>,
+    pub telefono: String,
 }
