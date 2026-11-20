@@ -71,6 +71,15 @@ impl crud::Update for Servicio {
         Path(id): Path<Uuid>,
         Json(payload): Json<Self>,
     ) -> Result<Json<Self>, ApiError> {
+        if sqlx::query("SELECT * FROM servicio WHERE id=$1")
+            .bind(id)
+            .execute(&state.pg)
+            .await?
+            .rows_affected()
+            == 0
+        {
+            return Err(ApiError::NotFound);
+        }
         let res: Self = sqlx::query_as("UPDATE servicio SET nombre = $1, descripcion = $2, precio = $3 WHERE id = $4 RETURNING *")
             .bind(payload.nombre)
             .bind(payload.descripcion)
