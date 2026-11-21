@@ -52,12 +52,24 @@ pub struct Empleado {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct EmpleadoPost {
-    pub id: Option<Uuid>,
     pub rol: Role,
     pub nombre: String,
     pub correo: String,
     pub telefono: String,
     pub contrasenna: String,
+    pub salario: Option<BigDecimal>,
+    pub estado: Option<Status>,
+    pub sucursal: Option<Uuid>,
+    pub area: Option<Uuid>,
+    pub supervisor: Option<bool>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct EmpleadoPatch {
+    pub rol: Role,
+    pub nombre: String,
+    pub correo: String,
+    pub telefono: String,
     pub salario: Option<BigDecimal>,
     pub estado: Option<Status>,
     pub sucursal: Option<Uuid>,
