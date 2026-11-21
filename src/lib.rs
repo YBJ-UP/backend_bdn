@@ -19,6 +19,10 @@ pub mod traits {
     pub mod crud;
 }
 
+pub mod utils {
+    pub mod hash;
+}
+
 pub mod service {
     pub mod client;
     pub mod department;
