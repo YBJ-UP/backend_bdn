@@ -56,6 +56,8 @@ impl crud::Post for Office {
 }
 
 impl crud::Update for Office {
+    type Input = Self;
+    type Output = Self;
     async fn update_one(
         State(state): State<Arc<AppState>>,
         Path(id): Path<Uuid>,

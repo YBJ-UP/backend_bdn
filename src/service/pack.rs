@@ -55,6 +55,8 @@ impl crud::Post for Paquete {
 }
 
 impl crud::Update for Paquete {
+    type Input = Self;
+    type Output = Self;
     async fn update_one(
         State(state): State<Arc<AppState>>,
         Path(id): Path<Uuid>,

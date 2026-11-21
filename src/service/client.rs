@@ -56,6 +56,8 @@ impl crud::Post for Cliente {
 }
 
 impl crud::Update for Cliente {
+    type Input = Self;
+    type Output = Self;
     async fn update_one(
         State(state): State<Arc<AppState>>,
         Path(id): Path<Uuid>,

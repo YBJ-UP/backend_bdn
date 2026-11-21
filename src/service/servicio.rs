@@ -68,6 +68,8 @@ impl crud::Post for Servicio {
 }
 
 impl crud::Update for Servicio {
+    type Input = Self;
+    type Output = Self;
     async fn update_one(
         State(state): State<Arc<AppState>>,
         Path(id): Path<Uuid>,

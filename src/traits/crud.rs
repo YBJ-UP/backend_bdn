@@ -37,11 +37,13 @@ pub trait Post: Sized {
 }
 
 pub trait Update: Sized {
+    type Input: DeserializeOwned;
+    type Output: Serialize;
     fn update_one(
         state: State<Arc<AppState>>,
         id: Path<Uuid>,
-        payload: Json<Self>,
-    ) -> impl Future<Output = Result<Json<Self>, ApiError>>;
+        payload: Json<Self::Input>,
+    ) -> impl Future<Output = Result<Json<Self::Output>, ApiError>>;
 }
 
 pub trait Delete: Sized {
