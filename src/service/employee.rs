@@ -5,6 +5,7 @@ use axum::{
     extract::{Path, State},
     http::StatusCode,
 };
+use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::{
@@ -143,4 +144,19 @@ impl crud::Delete for Empleado {
             Ok(StatusCode::NO_CONTENT)
         }
     }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct PwChange {
+    old: String,
+    new: String,
+}
+
+// Necesita el JWT, al igual que todo :(
+pub fn update_password(
+    State(state): State<Arc<AppState>>,
+    Path(id): Path<Uuid>,
+    Json(payload): Json<PwChange>,
+) -> Result<StatusCode, ApiError> {
+    Err(ApiError::WrongCredentials)
 }
