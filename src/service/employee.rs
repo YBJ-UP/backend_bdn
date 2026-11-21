@@ -42,15 +42,16 @@ impl crud::Get for Empleado {
 impl crud::Post for EmpleadoPost {
     async fn post_one(
         State(state): State<Arc<AppState>>,
-        Json(payload): Json<Self>,
-    ) -> Result<Json<Self>, ApiError> {
+        Json(payload): Json<Self::Input>,
+    ) -> Result<Json<Self::Output>, ApiError> {
         let pw_hash = hash_password(&payload.contrasenna)?;
-        let res = sqlx::query(
+        tracing::info!("Hash generado");
+        let created: Uuid = sqlx::query_scalar(
             "INSERT INTO usuario
-                (id_rol, nombre, correo, telefono, contrasenna, salario, sucursal, area, supervisor, estado)
+                (id_rol, nombre, correo, telefono, contrasena, salario, id_sucursal, id_area, supervisor, estado)
             VALUES
-                ((SELECT FROM rol WHERE id=$1), $2, $3, $4, $5, $6, $7, $8, $9, $10)
-            "
+                ((SELECT id FROM rol WHERE nombre=$1), $2, $3, $4, $5, $6, $7, $8, $9, $10)
+            RETURNING id"
             )
             .bind(payload.rol.to_string())
             .bind(payload.nombre)
@@ -65,6 +66,18 @@ impl crud::Post for EmpleadoPost {
             .fetch_one(&state.pg)
             .await?;
 
-        Err(ApiError::InvalidToken)
+        let res: Self::Output = sqlx::query_as(
+            "SELECT id, rol, nombre, correo, telefono, salario, estado, area, sucursal
+            FROM v_usuario_detalle WHERE id=$1",
+        )
+        .bind(created)
+        .fetch_one(&state.pg)
+        .await?;
+
+        Ok(Json(res))
     }
+
+    type Input = EmpleadoPost;
+
+    type Output = Empleado;
 }
