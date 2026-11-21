@@ -36,10 +36,12 @@ impl crud::Get for Cliente {
 }
 
 impl crud::Post for Cliente {
+    type Input = Self;
+    type Output = Self;
     async fn post_one(
         State(state): State<Arc<AppState>>,
-        Json(payload): Json<Self>,
-    ) -> Result<Json<Self>, ApiError> {
+        Json(payload): Json<Self::Input>,
+    ) -> Result<Json<Self::Output>, ApiError> {
         let res: Self = sqlx::query_as(
             "INSERT INTO usuario (nombre, correo, telefono, id_rol) VALUES ($1, $2, $3, 6) RETURNING id, nombre, correo, telefono",
         )

@@ -35,6 +35,8 @@ impl crud::Get for PaqueteView {
 }
 
 impl crud::Post for Paquete {
+    type Input = Self;
+    type Output = Self;
     async fn post_one(
         State(state): State<Arc<AppState>>,
         Json(payload): Json<Self>,

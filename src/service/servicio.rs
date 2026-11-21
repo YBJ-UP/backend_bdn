@@ -48,6 +48,8 @@ impl crud::Get for Servicio {
 }
 
 impl crud::Post for Servicio {
+    type Input = Self;
+    type Output = Self;
     async fn post_one(
         State(state): State<Arc<AppState>>,
         Json(payload): Json<Self>,

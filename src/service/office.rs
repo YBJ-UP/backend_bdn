@@ -39,6 +39,8 @@ impl crud::Get for OfficeView {
 }
 
 impl crud::Post for Office {
+    type Input = Self;
+    type Output = Self;
     async fn post_one(
         State(state): State<Arc<AppState>>,
         Json(payload): Json<Self>,

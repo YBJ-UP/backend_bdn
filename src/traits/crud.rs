@@ -5,6 +5,7 @@ use axum::{
     extract::{Path, State},
     http::StatusCode,
 };
+use serde::{Serialize, de::DeserializeOwned};
 use uuid::Uuid;
 
 use crate::{ApiError, AppState};
@@ -27,10 +28,12 @@ pub trait Get: Sized {
 }
 
 pub trait Post: Sized {
+    type Input: DeserializeOwned;
+    type Output: Serialize;
     fn post_one(
         state: State<Arc<AppState>>,
-        payload: Json<Self>,
-    ) -> impl Future<Output = Result<Json<Self>, ApiError>>;
+        payload: Json<Self::Input>,
+    ) -> impl Future<Output = Result<Json<Self::Output>, ApiError>>;
 }
 
 pub trait Update: Sized {
