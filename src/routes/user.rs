@@ -4,7 +4,7 @@ use axum::{Router, routing::get};
 
 use crate::{
     AppState,
-    model::usuario::{Cliente, Empleado, EmpleadoPost},
+    model::usuario::{Cliente, Empleado},
     traits::crud::*,
 };
 
@@ -12,9 +12,14 @@ pub fn user_routes() -> Router<Arc<AppState>> {
     Router::new()
         .route(
             "/employees",
-            get(Empleado::get_many).post(EmpleadoPost::post_one),
+            get(Empleado::get_many).post(Empleado::post_one),
         )
-        .route("/employees/{id}", get(Empleado::get_one))
+        .route(
+            "/employees/{id}",
+            get(Empleado::get_one)
+                .patch(Empleado::update_one)
+                .delete(Empleado::delete_one),
+        )
         .route("/clients", get(Cliente::get_many).post(Cliente::post_one))
         .route(
             "/clients/{id}",

@@ -3,6 +3,7 @@ use std::sync::Arc;
 use axum::{
     Json,
     extract::{Path, State},
+    http::StatusCode,
 };
 use uuid::Uuid;
 
@@ -39,7 +40,7 @@ impl crud::Get for Empleado {
     }
 }
 
-impl crud::Post for EmpleadoPost {
+impl crud::Post for Empleado {
     async fn post_one(
         State(state): State<Arc<AppState>>,
         Json(payload): Json<Self::Input>,
@@ -79,5 +80,67 @@ impl crud::Post for EmpleadoPost {
 
     type Input = EmpleadoPost;
 
-    type Output = Empleado;
+    type Output = Self;
+}
+
+impl crud::Update for Empleado {
+    type Input = EmpleadoPost;
+    type Output = Self;
+    async fn update_one(
+        State(state): State<Arc<AppState>>,
+        Path(id): Path<Uuid>,
+        Json(payload): Json<Self::Input>,
+    ) -> Result<Json<Self::Output>, ApiError> {
+        let pw_hash = hash_password(&payload.contrasenna)?;
+        tracing::info!("Hash generado");
+        let updated: Uuid = sqlx::query_scalar(
+            "UPDATE usuario
+                SET id_rol=(SELECT id FROM rol WHERE nombre=$1), nombre=$2, correo=$3,
+                telefono=$4, contrasena=$5, salario=$6, id_sucursal=$7, id_area=$8,
+                supervisor=$9, estado=$10
+            WHERE id=$11
+            RETURNING id",
+        )
+        .bind(payload.rol.to_string())
+        .bind(payload.nombre)
+        .bind(payload.correo)
+        .bind(payload.telefono)
+        .bind(pw_hash)
+        .bind(payload.salario)
+        .bind(payload.sucursal)
+        .bind(payload.area)
+        .bind(payload.supervisor)
+        .bind(payload.estado.unwrap_or_default().to_string())
+        .bind(id)
+        .fetch_one(&state.pg)
+        .await?;
+
+        let res: Self::Output = sqlx::query_as(
+            "SELECT id, rol, nombre, correo, telefono, salario, estado, area, sucursal
+            FROM v_usuario_detalle WHERE id=$1",
+        )
+        .bind(updated)
+        .fetch_one(&state.pg)
+        .await?;
+
+        Ok(Json(res))
+    }
+}
+
+impl crud::Delete for Empleado {
+    async fn delete_one(
+        State(state): State<Arc<AppState>>,
+        Path(id): Path<Uuid>,
+    ) -> Result<axum::http::StatusCode, ApiError> {
+        let res = sqlx::query("DELETE FROM usuario WHERE id=$1")
+            .bind(id)
+            .execute(&state.pg)
+            .await?;
+
+        if res.rows_affected() == 0 {
+            Err(ApiError::NotFound)
+        } else {
+            Ok(StatusCode::NO_CONTENT)
+        }
+    }
 }
